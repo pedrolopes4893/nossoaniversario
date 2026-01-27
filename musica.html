@@ -1,0 +1,143 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nossa música 🎶</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      width: 320px;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+      position: relative;
+    }
+
+    h1 { color: #f4a7b9; margin-bottom: 20px; }
+
+    .botao {
+      display: block;
+      margin: 15px auto;
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: none;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .certo { background-color: #f4a7b9; color: white; position: relative; }
+    .errado { background-color: #555; color: white; }
+
+    #mensagem {
+      margin-top: 15px;
+      font-style: italic;
+      color: #ffd1dc;
+      min-height: 24px;
+    }
+
+    /* TRANSIÇÃO */
+    #transicao {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1.2s ease;
+      z-index: 9999;
+    }
+
+    #transicao img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transform: scale(1);
+animation: zoom 2s ease forwards;
+}
+
+
+@keyframes zoom {
+from { transform: scale(1); }
+to { transform: scale(1.1); }
+}
+  </style>
+</head>
+
+<body>
+
+  <div id="transicao">
+    <img src="capa-musica.jpg" alt="Capa da música">
+  </div>
+
+  <audio id="audioMusica" preload="auto">
+    <source src="maybe-radi.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card">
+    <h1>Qual é a nossa música? 🎶</h1>
+
+    <button class="botao certo" id="certo">Maybe – RADI 🎶</button>
+    <button class="botao errado" id="errado">Por causa dessas malucas 🎶</button>
+
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+    let podeClicar = false;
+    const certo = document.getElementById("certo");
+    const errado = document.getElementById("errado");
+
+    certo.addEventListener("mouseover", () => {
+      if (!podeClicar) {
+        certo.style.transform =
+          `translate(${Math.random()*200-100}px, ${Math.random()*100-50}px)`;
+      }
+    });
+
+    errado.onclick = () => {
+      document.getElementById("mensagem").innerText =
+        "Ok ok, chega de tortura";
+      podeClicar = true;
+      certo.style.transform = "translate(0,0)";
+    };
+
+    certo.onclick = () => {
+      if (!podeClicar) return;
+
+      document.getElementById("mensagem").innerText =
+        "Aí sim… nossa música 💖";
+
+      document.getElementById("transicao").style.opacity = "1";
+
+      const audio = document.getElementById("audioMusica");
+      audio.volume = 0.6;
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+
+      setTimeout(() => {
+        window.location.href = "memoria2.html";
+      }, 8500);
+    };
+  </script>
+
+</body>
+</html>

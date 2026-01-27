@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Uma pergunta 💖</title>
+
+
+<style>
+body {
+margin: 0;
+height: 100vh;
+background: linear-gradient(135deg, #16213e, #1a1a2e);
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: Arial, sans-serif;
+color: white;
+}
+
+
+.card {
+background: rgba(255, 255, 255, 0.08);
+padding: 35px;
+border-radius: 20px;
+text-align: center;
+max-width: 320px;
+box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+}
+
+
+h1 {
+color: #f4a7b9;
+margin-bottom: 25px;
+}
+
+
+.botoes {
+display: flex;
+justify-content: space-around;
+margin-top: 25px;
+}
+
+
+.botao {
+padding: 12px 25px;
+border: none;
+border-radius: 25px;
+font-size: 1.1em;
+font-weight: bold;
+cursor: pointer;
+transition: 0.3s;
+}
+
+
+.sim {
+background-color: #f4a7b9;
+color: white;
+}
+
+
+.sim:hover {
+background-color: #e38fa3;
+transform: scale(1.05);
+}
+
+
+.nao {
+background-color: #555;
+color: white;
+}
+
+
+.nao:hover {
+background-color: #777;
+transform: scale(1.05);
+}
+</style>
+</head>
+
+
+<body>
+<div class="card">
+<h1>Antes de continuar… um desafio </h1>
+
+
+<div class="botoes">
+<button class="botao sim" onclick="responderSim()">Sim 😏</button>
+<button class="botao nao" onclick="responderNao()">Não 🙃</button>
+</div>
+</div>
+
+
+<script>
+function responderSim() {
+alert("Muito bem 😌");
+
+setTimeout(() => {
+window.location.href = "musica.html";
+}, 1000); // 1000 = 1 segundo
+}
+
+
+function responderNao() {
+alert("Você não tem opções não 😌");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Memória 2 💖</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0b1020, #16213e);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 32px;
+      border-radius: 20px;
+      text-align: center;
+      width: 340px;
+      box-shadow: 0 0 30px rgba(255, 105, 180, 0.25);
+    }
+
+    h1 {
+      color: #f4a7b9;
+      margin-bottom: 18px;
+      font-size: 1.3em;
+    }
+
+    .bilhete {
+font-family: 'Courier New', monospace;
+font-style: italic;
+color: #1a1a2e;
+background: #fffdf7;
+padding: 14px 16px;
+margin-bottom: 22px;
+line-height: 1.6;
+border-radius: 6px;
+
+
+/* linhas de caderno */
+background-image: repeating-linear-gradient(
+to bottom,
+transparent 0px,
+transparent 22px,
+#e5e5e5 23px
+);
+
+
+/* margem da folha */
+position: relative;
+
+opacity: 0;
+animation: surgir 1.2s ease forwards;
+}
+
+
+.bilhete::before {
+content: "";
+position: absolute;
+left: 12px;
+top: 0;
+height: 100%;
+width: 2px;
+background: #f4a7b9;
+opacity: 0.6;
+}
+
+    .botoes {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .botao {
+      padding: 10px 18px;
+      border-radius: 22px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s;
+      font-size: 0.95em;
+    }
+
+    .sim {
+      background-color: #f4a7b9;
+      color: white;
+    }
+
+    .nao {
+      background-color: #555;
+      color: white;
+    }
+
+    .botao:hover {
+      transform: scale(1.05);
+    }
+
+    #textoFinal {
+      margin-top: 20px;
+      line-height: 1.6;
+      color: #ffd1dc;
+      display: none;
+      font-size: 0.95em;
+    }
+
+    .continuar {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 22px;
+      background-color: #f4a7b9;
+      color: white;
+      border-radius: 24px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h1>lembra daquele dia?</h1>
+
+    <div class="bilhete">
+  Depois da escola,<br>
+  na sua casa
+    </div>
+
+    <div class="botoes" id="botoes">
+      <button class="botao sim" onclick="mostrar()">Lembro 😌</button>
+      <button class="botao nao" onclick="mostrar()">Agora lembrei…</button>
+    </div>
+
+    <div id="textoFinal">
+      Nosso dia de casal.<br>
+      Brincamos.<br>
+      Tomamos vinho.<br>
+      Quase queimamos o macarrão.<br>
+      <br>
+      E no final, ficou tudo simples.<br>
+      .<br><br>
+      <strong>Nosso momento.</strong>
+    </div>
+
+    <a href="memoria3.html" class="continuar" id="continuar">Continuar</a>
+  </div>
+
+  <script>
+    function mostrar() {
+      document.getElementById("botoes").style.display = "none";
+      document.getElementById("textoFinal").style.display = "block";
+      document.getElementById("continuar").style.display = "inline-block";
+    }
+  </script>
+
+</body>
+</html>

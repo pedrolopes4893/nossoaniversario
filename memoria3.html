@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Memória 3 🐺</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background: linear-gradient(135deg, #0b1020, #16213e);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family: Arial, sans-serif;
+  color:white;
+}
+
+.card{
+  background: rgba(255,255,255,0.08);
+  padding:32px;
+  border-radius:20px;
+  text-align:center;
+  width:400px;
+  box-shadow: 0 0 30px rgba(255,105,180,0.25);
+}
+
+h1{
+  color:#f4a7b9;
+  margin-bottom:10px;
+  font-size:1.25em;
+}
+
+.sub{
+  font-size:.95em;
+  opacity:.85;
+  margin-bottom:18px;
+}
+
+.grade{
+  line-height:1.9;
+  user-select:none;
+}
+
+.palavra{
+  display:inline;
+  cursor:default;
+  -webkit-tap-highlight-color: transparent;
+}
+.palavra::after{ content:"  "; }
+
+.palavra:hover .secreta{
+  color:#f4a7b9;
+  text-shadow:0 0 6px #f4a7b9;
+  transition:.2s;
+}
+
+.usada{
+  opacity:.6;
+  pointer-events:none;
+}
+
+/* feedback de erro */
+#erro{
+  display:none;
+  margin-top:12px;
+  color:#ffd1dc;
+  opacity:.9;
+  font-style:italic;
+}
+
+#final{
+  display:none;
+  margin-top:18px;
+  font-style:italic;
+  line-height:1.6;
+}
+
+.continuar{
+  display:none;
+  margin-top:18px;
+  padding:10px 22px;
+  background:#f4a7b9;
+  color:white;
+  border-radius:24px;
+  text-decoration:none;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h1>Qual série você me obrigou a ver?</h1>
+  <div class="sub">As dicas estão todas aí…</div>
+
+  <div class="grade" id="grade">
+
+  <!-- CERTAS -->
+  <span class="palavra" data-letter="C">ac<span class="secreta">c</span>ordo</span>
+  <span class="palavra" data-letter="A"><span class="secreta">a</span>mizade</span>
+  <span class="palavra" data-letter="E"><span class="secreta">e</span>ndividado</span>
+  <span class="palavra" data-letter="S">pa<span class="secreta">s</span>sado</span>
+  <span class="palavra" data-letter="D"><span class="secreta">d</span>ívida</span>
+  <span class="palavra" data-letter="E">probl<span class="secreta">e</span>ma</span>
+  <span class="palavra" data-letter="C"><span class="secreta">c</span>aça</span>
+  <span class="palavra" data-letter="A"><span class="secreta">a</span>giota</span>
+  <span class="palavra" data-letter="C">lou<span class="secreta">c</span>ura</span>
+  <span class="palavra" data-letter="A">b<span class="secreta">a</span>talha</span>
+
+  <!-- ISCAS -->
+  <span class="palavra" data-letter="R">co<span class="secreta">r</span>eia</span>
+  <span class="palavra" data-letter="O">b<span class="secreta">o</span>xe</span>
+  <span class="palavra" data-letter="I">v<span class="secreta">i</span>ngança</span>
+  <span class="palavra" data-letter="T">mis<span class="secreta">t</span>ério</span>
+  <span class="palavra" data-letter="U">l<span class="secreta">u</span>ta</span>
+  <span class="palavra" data-letter="N">sa<span class="secreta">n</span>gue</span>
+
+</div>
+
+  <div id="erro">decepção.</div>
+
+  <div id="final">
+    Foi difícil…<br>
+    mas eu vi até o final.<br><br>
+    <strong>Cães de Caça.</strong>
+  </div>
+
+  <a href="regra3meses.html" class="continuar" id="continuar">Continuar 💖</a>
+</div>
+
+<script>
+/* embaralhar */
+const grade = document.getElementById("grade");
+[...grade.children].sort(() => Math.random() - 0.5).forEach(el => grade.appendChild(el));
+
+const correta = ["C","A","E","S","D","E","C","A","C","A"];
+let idx = 0;
+
+const erroEl = document.getElementById("erro");
+let erroTimeout = null;
+
+function mostrarErro(msg){
+  erroEl.innerText = msg;
+  erroEl.style.display = "block";
+  clearTimeout(erroTimeout);
+  erroTimeout = setTimeout(() => {
+    erroEl.style.display = "none";
+  }, 1200);
+}
+
+document.querySelectorAll(".palavra").forEach(p => {
+  p.addEventListener("click", () => {
+    if (p.classList.contains("usada")) return;
+
+    const letra = p.dataset.letter;
+
+    // precisa clicar na PRÓXIMA letra correta
+    if (letra !== correta[idx]) {
+      mostrarErro("decepção.");
+      return;
+    }
+
+    // acertou
+    p.classList.add("usada");
+    idx++;
+
+    if (idx === correta.length) {
+      document.getElementById("final").style.display = "block";
+      document.getElementById("continuar").style.display = "inline-block";
+    }
+  });
+});
+</script>
+</body>
+</html>

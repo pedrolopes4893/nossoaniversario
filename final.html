@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carta 💌</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#16213e;
+
+      --env:#f4a7b9;
+      --env2:#ee8fa8;
+      --paper:#fffdf7;
+      --ink:#1a1a2e;
+
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 16px;
+
+      /* CONFIG VISUAL */
+      --peek: 70;     /* px que aparecem no fechado */
+      --inside: 420;  /* px que ficam "dentro" do envelope quando aberto */
+
+      /* controlado pelo JS (não mexe) */
+      --paperShift: 0px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(244,167,185,.25), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      color:#fff;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(460px, 92vw);
+      text-align:center;
+      padding:24px 10px;
+    }
+
+    .title{
+      font-weight:700;
+      margin:0 0 10px;
+      font-size:1.08rem;
+      opacity:.95;
+    }
+
+    .sub{
+      margin:0 0 18px;
+      opacity:.75;
+      font-size:.95rem;
+    }
+
+    /* CENA */
+    .scene{
+position:relative;
+width:340px;
+height:240px;
+margin:0 auto;
+filter: drop-shadow(var(--shadow));
+user-select:none;
+-webkit-user-select:none;
+touch-action: manipulation;
+overflow: visible; /* <-- importante */
+}
+
+
+/* corta SÓ o que vaza pra baixo quando FECHADO */
+.scene::after{
+content:"";
+position:absolute;
+left:-120px; /* folga pros lados */
+right:-120px;
+bottom:-900px; /* mega área pra baixo */
+height:900px;
+background: linear-gradient(135deg, var(--bg1), var(--bg2));
+z-index:4; /* fica na frente do papel */
+pointer-events:none;
+}
+
+
+/* quando ABRE, remove o cortador */
+.open.scene::after{
+display:none;
+}
+
+    /* PAPEL */
+    .paper{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      width:300px;
+      height:520px;
+      max-height:72vh;
+      background:var(--paper);
+      border-radius:14px;
+      overflow:hidden;
+      color:var(--ink);
+
+      /* papel fica entre o fundo e a frente do envelope */
+      z-index:3;
+
+      /* linhas */
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 22px,
+        #e8e8e8 23px
+      );
+
+      transform: translateX(-50%) translateY(var(--paperShift));
+      transition: transform .85s cubic-bezier(.2,.9,.2,1);
+      will-change: transform;
+    }
+
+    .paper::before{
+      content:"";
+      position:absolute;
+      left:18px;
+      top:0;
+      width:2px;
+      height:100%;
+      background: rgba(244,167,185,.65);
+    }
+
+    .grab{
+      position:absolute;
+      top:10px;
+      left:50%;
+      transform:translateX(-50%);
+      width:120px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(26,26,46,.18);
+    }
+
+    .content{
+      height:100%;
+      padding: 28px 22px 26px 38px;
+      overflow:hidden;
+    }
+
+    .text{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+      line-height:1.75;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+      font-size:.95rem;
+      padding-right:6px;
+    }
+
+    /* Envelope (camadas separadas pra não dar z-index bizarro) */
+    .env-back{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, var(--env), var(--env2));
+      border-radius: var(--radius);
+      z-index:2;
+    }
+
+    .env-front{
+      position:absolute;
+      inset:0;
+      border-radius: var(--radius);
+      overflow:hidden;
+      pointer-events:none;
+      z-index:5; /* fica na frente do papel */
+    }
+
+    .env-front::before{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:62%;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 20%),
+        linear-gradient(180deg, var(--env2), var(--env));
+      border-radius: 0 0 var(--radius) var(--radius);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+    }
+
+    .env-front::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      bottom:38%;
+      margin:auto;
+      width:0; height:0;
+      border-left: 170px solid transparent;
+      border-right:170px solid transparent;
+      border-top: 110px solid rgba(255,255,255,.10);
+      filter: blur(.2px);
+      opacity:.55;
+    }
+
+    /* ABA */
+    .flap{
+      position:absolute;
+      left:0; right:0;
+      top:0;
+      height:120px;
+      transform-origin: top center;
+      transform: rotateX(0deg);
+      transition: transform .65s cubic-bezier(.2,.9,.2,1);
+      z-index:6;
+      pointer-events:none;
+    }
+
+    .flap::before{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      margin:auto;
+      width:0; height:0;
+      border-left: 170px solid transparent;
+      border-right:170px solid transparent;
+      border-bottom: 120px solid rgba(255,255,255,.20);
+      top:0;
+      filter: blur(.2px);
+    }
+
+    /* SELINHO */
+    .seal{
+      position:absolute;
+      left:50%;
+      top:118px;
+      transform:translateX(-50%);
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.65), transparent 45%),
+        linear-gradient(135deg, #ff4d6d, #ff8fab);
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      z-index:7;
+      transition: transform .5s ease, opacity .5s ease;
+      pointer-events:none;
+    }
+
+    .hint{
+      margin-top:14px;
+      opacity:.85;
+      font-size:.95rem;
+    }
+
+    /* ABERTO */
+    .open .flap{ transform: rotateX(-160deg); }
+
+    .open .seal{
+      transform: translateX(-50%) translateY(12px) scale(.9);
+      opacity:0;
+    }
+
+    .open .text{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    .open .content{
+      overflow:auto;
+    }
+
+    .content::-webkit-scrollbar{ width:6px; }
+    .content::-webkit-scrollbar-thumb{
+      background: rgba(244,167,185,.95);
+      border-radius:10px;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .paper,.flap,.seal,.text{ transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1 class="title">Pensou que não teria esse mês?</h1>
+    <p class="sub">já clicou no envelope?</p>
+
+    <div class="scene" id="scene" aria-label="Envelope com carta" title="Clique pra abrir/fechar">
+      <div class="env-back"></div>
+
+      <div class="paper" id="paper">
+        <div class="grab"></div>
+        <div class="content">
+          <div class="text">
+  <strong>feliz 3 meses, meu amor. 💖</strong><br><br>
+
+  parece que foi ontem que eu pensei<br>
+  “que patricinha chata”,<br>
+  mas já fazem 3 meses, kakaka<br>
+  apesar de eu continuar falando…<br><br>
+
+  esse mês de férias foi um dos melhores meses que eu já tive.<br>
+  porque tinha você.<br>
+  você me ligando toda hora só pra perguntar se eu te amo —<br>
+  mesmo sabendo a resposta —<br>
+  e eu fingindo que reclamo, mas não tem como… eu te amo.<br><br>
+
+  você é a pessoa que me ensinou o que saudade realmente significa.<br>
+  não aquela pesada,<br>
+  mas aquela que aperta o peito e ao mesmo tempo faz sorrir.<br>
+  aquela que dá vontade de abraçar forte quando vê de novo<br>
+  e pensar: “é aqui que eu quero estar”.<br><br>
+
+  cada vez mais eu aprendo a amar seus surtos<br>
+  (mesmo que às vezes diários),<br>
+  e o seu jeito carinhoso que aparece do nada, kakakak.<br><br>
+
+  e quando eu falo de futuro, meu amor,<br>
+  não falo de algo distante e abstrato.<br>
+  eu falo de você.<br>
+  de nós.<br>
+  da nossa família.<br>
+  e da vida que eu quero construir do seu lado.<br><br>
+
+  talvez eu não seja perfeito.<br>
+  talvez eu erre, me embole nas palavras,<br>
+  ou não saiba demonstrar tudo do jeito certo.<br>
+  mas uma coisa eu sei com certeza absoluta:<br><br>
+
+  eu te amo.<br>
+  e continuo escolhendo você.<br>
+  hoje, amanhã<br>
+  e em todos os meses que ainda vão virar cartas.<br><br>
+
+  feliz nosso dia, minha princesa. 💌
+</div>
+        </div>
+      </div>
+
+      <div class="env-front"></div>
+      <div class="flap"></div>
+      <div class="seal">♥</div>
+    </div>
+
+    <div class="hint" id="hint">Clique no envelope pra abrir. Clique de novo pra fechar.</div>
+  </div>
+
+  <script>
+    const scene = document.getElementById("scene");
+    const paper = document.getElementById("paper");
+    const hint  = document.getElementById("hint");
+
+    let closedShiftPx = 0;
+    let openShiftPx = 0;
+
+    function computeShifts(){
+      // garante medidas corretas
+      const paperH = paper.getBoundingClientRect().height;
+
+      const peek = Number(getComputedStyle(document.documentElement).getPropertyValue("--peek")) || 70;
+      const inside = Number(getComputedStyle(document.documentElement).getPropertyValue("--inside")) || 180;
+
+      // fechado: empurra pra baixo deixando só "peek" aparecendo
+      closedShiftPx = Math.max(0, paperH - peek);
+
+      // aberto: puxa pra cima deixando "inside" ainda dentro do envelope
+      // (mesma lógica do calc(-100% + inside), só que 100% vira a altura real do papel)
+      openShiftPx = -Math.max(0, paperH - inside);
+
+      // aplica estado atual sem pular
+      applyShift(scene.classList.contains("open") ? openShiftPx : closedShiftPx, false);
+    }
+
+    function applyShift(px, animate=true){
+      if(!animate){
+        paper.style.transition = "none";
+        paper.style.setProperty("--paperShift", px + "px");
+        // força reflow e volta transição
+        paper.getBoundingClientRect();
+        paper.style.transition = "";
+      }else{
+        paper.style.setProperty("--paperShift", px + "px");
+      }
+    }
+
+    function openLetter(){
+      scene.classList.add("open");
+      hint.textContent = "Pronto. Agora lê que deu  um trabalho desgraçado";
+      applyShift(openShiftPx, true);
+    }
+
+    function closeLetter(){
+      scene.classList.remove("open");
+      hint.textContent = "Clique no envelope pra abrir. Clique de novo pra fechar.";
+      applyShift(closedShiftPx, true);
+    }
+
+    // toggle
+    scene.addEventListener("click", () => {
+      if(scene.classList.contains("open")) closeLetter();
+      else openLetter();
+    });
+
+    // recalcula ao carregar e ao redimensionar (celular rotacionando etc.)
+    window.addEventListener("load", computeShifts);
+    window.addEventListener("resize", computeShifts);
+
+    // caso fontes/altura mudem um tiquinho depois do load
+    setTimeout(computeShifts, 50);
+    setTimeout(computeShifts, 250);
+  </script>
+</body>
+</html>

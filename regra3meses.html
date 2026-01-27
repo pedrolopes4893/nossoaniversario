@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>A regra dos 3 meses</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background: linear-gradient(135deg, #0b1020, #16213e);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family: Arial, sans-serif;
+  color:white;
+}
+
+.card{
+  background: rgba(255,255,255,0.08);
+  padding:36px;
+  border-radius:20px;
+  text-align:center;
+  width:380px;
+  box-shadow: 0 0 30px rgba(255,105,180,0.25);
+}
+
+.texto{
+  font-size:1em;
+  line-height:1.7;
+  margin-bottom:20px;
+  opacity:.95;
+}
+
+.pergunta{
+  margin-bottom:16px;
+  font-weight:bold;
+}
+
+.botoes{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+
+.botao{
+  padding:10px 22px;
+  border:none;
+  border-radius:24px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.sim{
+  background:#f4a7b9;
+  color:white;
+}
+
+.nao{
+  background:#555;
+  color:white;
+}
+
+.botao:hover{
+  transform:scale(1.05);
+}
+
+#resposta{
+  display:none;
+  margin-top:16px;
+  font-style:italic;
+  color:#ffd1dc;
+  line-height:1.6;
+}
+
+#final{
+  display:none;
+  margin-top:16px;
+  line-height:1.7;
+  color:#ffd1dc;
+}
+
+.continuar{
+  display:none;
+  margin-top:18px;
+  padding:10px 22px;
+  background:#f4a7b9;
+  color:white;
+  border-radius:24px;
+  text-decoration:none;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+
+  <div class="texto">
+    Muitos casais<br>
+    não passam dos <strong>3 meses</strong>.<br><br>
+
+    Dizem que é aí que alguém desiste.<br>
+    Que a rotina pesa.<br>
+    Que percebem que não são um pro outro.
+  </div>
+
+  <div class="pergunta">Você acredita nisso?</div>
+
+  <div class="botoes" id="botoes">
+    <button class="botao sim" onclick="responder('sim')">Sim 🙄</button>
+    <button class="botao nao" onclick="responder('nao')">Nunca acreditei 😌</button>
+  </div>
+
+  <div id="resposta"></div>
+
+  <div id="final">
+    Pois é…<br><br>
+
+    A gente não é a maioria.<br>
+    <strong>A gente é melhor,</strong><br> Fazer oque 😌.<br><br>
+
+    "3 meses que passam depressa, curtir é a prioridade".<br>
+    Tive que botar amor, não teve jeito kakakak
+  </div>
+
+  <a href="final.html" class="continuar" id="continuar">Continuar 💖</a>
+
+</div>
+
+<script>
+function responder(tipo){
+  document.getElementById("botoes").style.display = "none";
+
+  const r = document.getElementById("resposta");
+  r.style.display = "block";
+
+  if(tipo === "sim"){
+    r.innerHTML = "<strong>Não acredita não</strong><br>Já passou, já era kakaka<br>só se voltar tudo agora ";
+  } else {
+    r.innerHTML = "<strong>Sempre soube.</strong><br>Você não ia clicar em sim…<br><strong>Ia?";
+  }
+
+  document.getElementById("final").style.display = "block";
+  document.getElementById("continuar").style.display = "inline-block";
+}
+</script>
+
+</body>
+</html>
